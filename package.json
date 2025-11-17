@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/dragnum3xp/Monster-Hunter-Species/issues"
   },
-  "homepage": "https://github.com/dragnum3xp/Monster-Hunter-Species#readme"
+  "homepage": "https://github.com/dragnum3xp/Monster-Hunter-Species#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
 }
