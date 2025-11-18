@@ -1,41 +1,48 @@
 const mongodb = require("../data/database");
 const ObjectId = require("mongodb").ObjectId;
 
-const getAll = (req, res) => {
+const getAll = async (req, res) => {
   //#swagger.tags=["Users"]
-  mongodb
-    .getDatabase()
-    .db("MonsterHunter")
-    .collection("Users")
-    .find()
-    .toArray((err, lists) => {
-      if (err) {
-        res.status(400).json({ message: err });
-      }
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).json(lists);
-    });
+  try {
+    const lists = await mongodb
+      .getDatabase()
+      .db("MonsterHunter")
+      .collection("Users")
+      .find()
+      .toArray();
+
+    res.status(200).json(lists);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
 
 
-const getSingle = (req, res) => {
+const getSingle = async (req, res) => {
   //#swagger.tags=["Users"]
+
   if (!ObjectId.isValid(req.params.id)) {
-    res.status(400).json('Must use a valid user id to find a contact.');
+    return res.status(400).json({ message: 'Must use a valid user id to find a contact.' });
   }
-  const userId = new ObjectId(req.params.id);
-  mongodb
-    .getDatabase()
-    .db("MonsterHunter")
-    .collection("Users")
-    .find({ _id: userId })
-    .toArray((err, result) => {
-      if (err) {
-        res.status(400).json({ message: err });
-      }
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).json(result[0]);
-    });
+
+  try {
+    const userId = new ObjectId(req.params.id);
+
+    const result = await mongodb
+      .getDatabase()
+      .db("MonsterHunter")
+      .collection("Users")
+      .findOne({ _id: userId });
+
+    if (!result) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    res.status(200).json(result);
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
 
 const createUser = async (req, res) => {
