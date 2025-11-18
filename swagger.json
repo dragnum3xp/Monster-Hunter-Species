@@ -5,7 +5,7 @@
     "description": "API about species information",
     "version": "1.0.0"
   },
-  "host": "localhost:8080",
+  "host": "https://monster-hunter-species.onrender.com",
   "basePath": "/",
   "schemes": [
     "http",
