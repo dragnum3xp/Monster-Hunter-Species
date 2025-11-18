@@ -4,7 +4,7 @@ const ObjectId = require("mongodb").ObjectId;
 const getAll = (req, res) => {
   //#swagger.tags=["MonsterHunterSpecies"]
   mongodb
-    .getDb()
+    .getDatabase()
     .db("MonsterHunter")
     .collection("MonsterHunterSpecies")
     .find()
@@ -25,7 +25,7 @@ const getSingle = (req, res) => {
   }
   const monsterId = new ObjectId(req.params.id);
   mongodb
-    .getDb()
+    .getDatabase()
     .db("MonsterHunter")
     .collection("MonsterHunterSpecies")
     .find({ _id: monsterId })
