@@ -1,25 +1,43 @@
 const mongodb = require("../data/database");
 const ObjectId = require("mongodb").ObjectId;
 
-const getAll = async (req, res) => {
+const getAll = (req, res) => {
   //#swagger.tags=["MonsterHunterSpecies"]
-    const result = await mongodb.getDatabase().db("MonsterHunter").collection("MonsterHunterSpecies").find();
-    result.toArray().then((MonsterHunterSpecies) => {
-      res.setHeader("content-type", "application/json");
-      res.status(200).json(MonsterHunterSpecies);
-    })
+  mongodb
+    .getDb()
+    .db("MonsterHunter")
+    .collection("MonsterHunterSpecies")
+    .find()
+    .toArray((err, lists) => {
+      if (err) {
+        res.status(400).json({ message: err });
+      }
+      res.setHeader('Content-Type', 'application/json');
+      res.status(200).json(lists);
+    });
 };
 
 
-const getSingle = async (req, res) => {
+const getSingle = (req, res) => {
   //#swagger.tags=["MonsterHunterSpecies"]
-    const monsterId = new ObjectId(req.params.id);
-    const result = await mongodb.getDatabase().db("MonsterHunter").collection("MonsterHunterSpecies").find({ _id: monsterId});
-    result.toArray().then((MonsterHunterSpecies) => {
-      res.setHeader("content-type", "application/json");
-      res.status(200).json(MonsterHunterSpecies[0]);
-    })
+  if (!ObjectId.isValid(req.params.id)) {
+    res.status(400).json('Must use a valid monster id to find a contact.');
+  }
+  const monsterId = new ObjectId(req.params.id);
+  mongodb
+    .getDb()
+    .db("MonsterHunter")
+    .collection("MonsterHunterSpecies")
+    .find({ _id: monsterId })
+    .toArray((err, result) => {
+      if (err) {
+        res.status(400).json({ message: err });
+      }
+      res.setHeader('Content-Type', 'application/json');
+      res.status(200).json(result[0]);
+    });
 };
+
 
 const createMonster = async (req, res) => {
   //#swagger.tags=["MonsterHunterSpecies"]

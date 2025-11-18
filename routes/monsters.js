@@ -7,9 +7,9 @@ router.get("/", monstersController.getAll);
 
 router.get("/:id", monstersController.getSingle);
 
-router.post("/", monstersController.createMonster);
+router.post("/", validation.saveMonster, monstersController.createMonster);
 
-router.put("/:id", monstersController.updateMonster);
+router.put("/:id", validation.saveMonster, monstersController.updateMonster);
 
 router.delete("/:id", monstersController.deleteMonster);
 
