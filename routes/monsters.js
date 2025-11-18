@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const monstersController = require("../controllers/monsters");
+const validation = require('../middleware/validate');
 
 router.get("/", monstersController.getAll);
 
