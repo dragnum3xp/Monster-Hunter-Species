@@ -54,13 +54,16 @@ const createUser = async (req, res) => {
       password : req.body.password,
       birthDay : req.body.birthDay
     };
-    const response = await mongodb.getDatabase().db("MonsterHunter").collection("Users").insertOne(user);
-    if (response.acknowledged > 0) {
-      res.status(204).send()
-    } else {
-      res.status(500).json(response.error || "Some error occurred while creating the User");
-    }
-};
+    try{
+      const response = await mongodb.getDatabase().db("MonsterHunter").collection("Users").insertOne(user);
+      if (response.acknowledged > 0) {
+        res.status(204).send()
+      } 
+    }catch(err) {
+        res.status(500).json({
+      message: err.message || "Some error occurred while creating the User"});
+      }
+  };
 
 const updateUser = async (req, res) => {
   //#swagger.tags=["Users"]
@@ -73,23 +76,29 @@ const updateUser = async (req, res) => {
       birthDay : req.body.birthDay
 
     };
-    const response = await mongodb.getDatabase().db("MonsterHunter").collection("Users").replaceOne({ _id: userId}, user);
-    if (response.modifiedCount > 0) {
-      res.status(204).send()
-    } else {
-      res.status(500).json(response.error || "Some error occurred while updating the User");
-    }
-};
+    try{
+      const response = await mongodb.getDatabase().db("MonsterHunter").collection("Users").replaceOne({ _id: userId}, user);
+      if (response.modifiedCount > 0) {
+        res.status(204).send()
+      } 
+    }catch(err) {
+        res.status(500).json({
+        message: err.message || "Some error occurred while updating the User"});
+      }
+  };
 
 const deleteUser = async (req, res) => {
   //#swagger.tags=["Users"]
     const userId = new ObjectId(req.params.id);
+    try{
     const response = await mongodb.getDatabase().db("MonsterHunter").collection("Users").deleteOne({ _id: userId});
     if (response.deletedCount > 0) {
       res.status(204).send()
-    } else {
-      res.status(500).json(response.error || "Some error occurred while deleting the User");
-    }
+    } 
+  }catch(err) {
+      res.status(500).json({
+      message: err.message || "Some error occurred while deleting the User"});
+  }
 };
 
 
